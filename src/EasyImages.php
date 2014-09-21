@@ -11,7 +11,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 
 
-class ImageHandler extends CApplicationComponent {
+class EasyImages extends CApplicationComponent {
 
 
 
