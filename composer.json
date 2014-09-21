@@ -1,0 +1,24 @@
+{
+    "name": "happyproff/yii-easyimages",
+    "type": "library",
+    "description": "Manage your images in AR is easy.",
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Stanislav Gamayunov", "email": "happyproff@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "ext-gd": "*",
+        "imagine/imagine": "*",
+        "symfony/finder": "2.*",
+        "symfony/filesystem": "2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "happyproff\\YiiEasyImages\\": "src/"
+        }
+    }
+}
