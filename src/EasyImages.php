@@ -8,10 +8,13 @@ namespace happyproff\YiiEasyImages;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
+use Imagine\Image\ImageInterface;
+use Imagine\Gd\Imagine;
+use Imagine\Image\Box;
 
 
 
-class EasyImages extends CApplicationComponent {
+class EasyImages extends \CApplicationComponent {
 
 
 
@@ -26,7 +29,7 @@ class EasyImages extends CApplicationComponent {
     public $imagesBasePath = 'root.www.images';
 
     /**
-     * @var Imagine\Gd\Imagine
+     * @var Imagine
      */
     public $processor;
 
@@ -44,34 +47,34 @@ class EasyImages extends CApplicationComponent {
 
     public function init () {
 
-        $this->processor = new Imagine\Gd\Imagine;
+        $this->processor = new Imagine;
 
     }
 
 
 
     /**
-     * @param CActiveRecord $model
+     * @param \CActiveRecord $model
      * @param string $attribute имя поля, содержащего CUploadedFile. В последствии этому полю будет присвоено имя файла изображения.
-     * @param CUploadedFile $image
+     * @param \CUploadedFile $image
      * @param array $sizes
      *
-     * @throws CException
+     * @throws \CException
      *
      * @return bool
      */
-    public function save (CActiveRecord $model, $attribute = 'image', CUploadedFile $image, $sizes = []) {
+    public function save (\CActiveRecord $model, $attribute = 'image', \CUploadedFile $image, $sizes = []) {
 
-        $folderModel = Yii::getPathOfAlias($this->imagesBasePath) . '/' . strtolower(get_class($model));
+        $folderModel = $this->extractPath($model, $attribute, true);
         if (!file_exists($folderModel)) mkdir($folderModel);
 
         $imageExtension = isset($this->mimeToExtension[$image->getType()]) ? $this->mimeToExtension[$image->getType()] : 'jpg';
         $imageId = $this->getRandomHash($model, $attribute);
 
-        $imagePathTemp = Yii::getPathOfAlias('temp') . '/' . $imageId . '.' . $imageExtension;
+        $imagePathTemp = \Yii::getPathOfAlias('temp') . '/' . $imageId . '.' . $imageExtension;
         if ($image->saveAs($imagePathTemp)) {
             foreach ($sizes as $sizeName => $size) {
-                $folderModelAttribute = $folderModel . '/' . strtolower($attribute);
+                $folderModelAttribute = $this->extractPath($model, $attribute);
                 if (!file_exists($folderModelAttribute)) mkdir($folderModelAttribute);
 
                 $pathImageSize = $folderModelAttribute . '/' . $imageId . '_' . $sizeName . '.' . $imageExtension;
@@ -83,10 +86,10 @@ class EasyImages extends CApplicationComponent {
                     $this->processor
                         ->open($imagePathTemp)
                         ->thumbnail(
-                                new Imagine\Image\Box($size['width'], $size['height']),
+                                new Box($size['width'], $size['height']),
                                 (!isset($size['inset']) or $size['inset'])
-                                    ? Imagine\Image\ImageInterface::THUMBNAIL_INSET
-                                    : Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND
+                                    ? ImageInterface::THUMBNAIL_INSET
+                                    : ImageInterface::THUMBNAIL_OUTBOUND
                         )
                         ->save($pathImageSize, ['quality' => 90]);
                 }
@@ -105,10 +108,10 @@ class EasyImages extends CApplicationComponent {
 
 
     /**
-     * @param CActiveRecord $model
+     * @param \CActiveRecord $model
      * @param string $attribute
      */
-    public function delete (CActiveRecord $model, $attribute) {
+    public function delete (\CActiveRecord $model, $attribute) {
 
         $path = $this->extractPath($model, $attribute);
 
@@ -128,14 +131,18 @@ class EasyImages extends CApplicationComponent {
 
 
     /**
-     * @param CActiveRecord $model
+     * @param \CActiveRecord $model
      * @param string $attribute
      *
      * @return string
      */
-    protected function extractPath (CActiveRecord $model, $attribute) {
+    public function extractPath (\CActiveRecord $model, $attribute, $onlyModel = false) {
 
-        $path = Yii::getPathOfAlias($this->imagesBasePath) . '/' . strtolower(get_class($model)) . '/' . strtolower($attribute);
+        $path = \Yii::getPathOfAlias($this->imagesBasePath) . '/' . strtolower(get_class($model));
+
+        if (!$onlyModel) {
+            $path .= '/' . strtolower($attribute);
+        }
 
         return $path;
 
