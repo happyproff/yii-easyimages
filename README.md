@@ -3,7 +3,7 @@ yii-easyimages
 
 [![License](https://poser.pugx.org/happyproff/yii-easyimages/license.svg)](https://packagist.org/packages/happyproff/yii-easyimages)
 
-Простая работы с изображениями для моделей. Автоматическая загрузка, генерация нужных размеров, удаление.
+Простая работа с изображениями для моделей. Автоматическая загрузка, генерация нужных размеров, удаление.
 
 ## Использование
 
