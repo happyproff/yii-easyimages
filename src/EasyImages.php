@@ -20,6 +20,7 @@ class EasyImages extends \CApplicationComponent {
 
     const KEY_ID = 'id';
     const KEY_EXT = 'ext';
+    const DEFAULT_QUALITY = 90;
 
 
 
@@ -77,11 +78,15 @@ class EasyImages extends \CApplicationComponent {
                 $folderModelAttribute = $this->extractPath($model, $attribute);
                 if (!file_exists($folderModelAttribute)) mkdir($folderModelAttribute);
 
+
+                $quality = array_key_exists('quality', $size) ? intval($size['quality']) : self::DEFAULT_QUALITY;
+                if ($quality <= 0 or $quality > 100) $quality = self::DEFAULT_QUALITY;
+
                 $pathImageSize = $folderModelAttribute . '/' . $imageId . '_' . $sizeName . '.' . $imageExtension;
                 if (array_key_exists('enabled', $size) and $size['enabled'] == false) {
                     $this->processor
                         ->open($imagePathTemp)
-                        ->save($pathImageSize, ['quality' => 90]);
+                        ->save($pathImageSize, ['quality' => $quality]);
                 } else {
                     $this->processor
                         ->open($imagePathTemp)
@@ -91,7 +96,7 @@ class EasyImages extends \CApplicationComponent {
                                     ? ImageInterface::THUMBNAIL_INSET
                                     : ImageInterface::THUMBNAIL_OUTBOUND
                         )
-                        ->save($pathImageSize, ['quality' => 90]);
+                        ->save($pathImageSize, ['quality' => $quality]);
                 }
             }
         } else {

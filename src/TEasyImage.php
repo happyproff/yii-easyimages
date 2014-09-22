@@ -25,7 +25,7 @@ trait TEasyImage {
 
                     $this->$attribute = json_encode($imageName);
                 } catch (\Exception $e) {
-                    throw new CException('image saving failed');
+                    throw new \CException('image saving failed: "' . $e->getMessage() . '"');
                 }
             }
         }
@@ -34,7 +34,14 @@ trait TEasyImage {
 
 
 
-    public function getImageUrl ($attribute = 'image', $size = null) {
+    public function getImageUrl ($size = null, $attribute = null) {
+
+        $sizes = $this->images();
+        if (!$sizes) throw new \Exception('no images declaration');
+
+        if ($attribute === null) {
+            $attribute = key($sizes);
+        }
 
         if (!$this->$attribute) return false;
 
@@ -44,7 +51,6 @@ trait TEasyImage {
 
         $data = json_decode($this->$attribute, true);
         if (!$size) {
-            $sizes = $this->images();
             if (!array_key_exists($attribute, $sizes)) return false;
             $size = key($sizes[$attribute]);
         }
