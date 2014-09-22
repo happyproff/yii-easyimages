@@ -54,7 +54,7 @@ public function images () {
             self::IMAGE_ORIGINAL = ['width' => 1920, 'height' => 1080, 'enabled' = false],
             self::IMAGE_FULL => ['width' => 960, 'height' => 720, 'quality' => 100],
             self::IMAGE_LIST => ['width' => 146, 'height' => 160, 'inset' => false,],
-            self::IMAGE_ITEM => ['width' => 300, 'height' => 99'],
+            self::IMAGE_ITEM => ['width' => 300, 'height' => 999],
         ],
     ];
 }
