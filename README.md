@@ -18,7 +18,7 @@ yii-easyimages
 ```php
 'components' => [
     ...,
-    'easyimages' => [
+    'easyImages' => [
         'class' => 'happyproff\YiiEasyImages\EasyImages',
     ],
     ...
