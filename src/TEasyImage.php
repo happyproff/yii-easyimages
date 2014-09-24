@@ -14,18 +14,19 @@ trait TEasyImage {
 
         if (method_exists($this, 'images')) {
             foreach ($this->images() as $attribute => $config) {
-                $image = \CUploadedFile::getInstance($this, $attribute);
-                try {
-                    $imageName = \Yii::app()->easyimages->save($this, $attribute, $image, $config);
+                if ($image = \CUploadedFile::getInstance($this, $attribute)) {
+                    try {
+                        $imageName = \Yii::app()->easyimages->save($this, $attribute, $image, $config);
 
-                    // delete old image
-                    if ($this->$attribute and $data = json_decode($this->$attribute)) {
-                        \Yii::app()->easyimages->delete($this, $attribute);
+                        // delete old image
+                        if ($this->$attribute and $data = json_decode($this->$attribute)) {
+                            \Yii::app()->easyimages->delete($this, $attribute);
+                        }
+
+                        $this->$attribute = json_encode($imageName);
+                    } catch (\Exception $e) {
+                        throw new \CException('image saving failed: "' . $e->getMessage() . '"');
                     }
-
-                    $this->$attribute = json_encode($imageName);
-                } catch (\Exception $e) {
-                    throw new \CException('image saving failed: "' . $e->getMessage() . '"');
                 }
             }
         }
