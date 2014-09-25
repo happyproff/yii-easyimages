@@ -16,11 +16,11 @@ trait TEasyImage {
             foreach ($this->images() as $attribute => $config) {
                 if ($image = \CUploadedFile::getInstance($this, $attribute)) {
                     try {
-                        $imageName = \Yii::app()->easyimages->save($this, $attribute, $image, $config);
+                        $imageName = \Yii::app()->easyImages->save($this, $attribute, $image, $config);
 
                         // delete old image
                         if ($this->$attribute and $data = json_decode($this->$attribute)) {
-                            \Yii::app()->easyimages->delete($this, $attribute);
+                            \Yii::app()->easyImages->delete($this, $attribute);
                         }
 
                         $this->$attribute = json_encode($imageName);
@@ -51,6 +51,10 @@ trait TEasyImage {
         $url .= '/' . strtolower($attribute);
 
         $data = json_decode($this->$attribute, true);
+        if (!(array_key_exists('id', $data) and array_key_exists('ext', $data))) {
+            return false;
+        }
+
         if (!$size) {
             if (!array_key_exists($attribute, $sizes)) return false;
             $size = key($sizes[$attribute]);
