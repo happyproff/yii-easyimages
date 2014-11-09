@@ -28,6 +28,9 @@ trait TActiveFormImageField {
             $input .= Html::image($imageUrl) . '<br>';
         }
         $input .= Html::activeFileField($model, $attribute);
+
+        $input .= Html::checkBox(get_class($model) . '[delete_images][' . $attribute . ']', false, ['label' => 'Удалить это изображение?']);
+
         $htmlOptions['input'] = $input;
 
         $html = Html::activeControlGroup(Html::INPUT_TYPE_FILE, $model, $attribute, $htmlOptions, []);

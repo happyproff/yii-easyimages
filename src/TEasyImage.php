@@ -14,6 +14,13 @@ trait TEasyImage {
 
         if (method_exists($this, 'images')) {
             foreach ($this->images() as $attribute => $config) {
+
+                $postkey = get_called_class();;
+                if (isset($_POST[$postkey]['delete_images']) and is_array($_POST[$postkey]['delete_images']) and array_key_exists($attribute, $_POST[$postkey]['delete_images'])) {
+                    \Yii::app()->easyImages->delete($this, $attribute);
+                    $this->$attribute = '';
+                }
+
                 if ($image = \CUploadedFile::getInstance($this, $attribute)) {
                     try {
                         $imageName = \Yii::app()->easyImages->save($this, $attribute, $image, $config);
