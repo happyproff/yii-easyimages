@@ -24,12 +24,13 @@ trait TActiveFormImageField {
         $htmlOptions = $this->processControlGroupOptions($model, $attribute, $htmlOptions);
 
         $input = '';
+        $deleteCheckbox = '';
         if ($model->$attribute and $imageUrl = $model->getImageUrl($size)) {
             $input .= Html::image($imageUrl) . '<br>';
+            $deleteCheckbox = Html::checkBox(get_class($model) . '[delete_images][' . $attribute . ']', false, ['label' => 'Удалить это изображение?']);
         }
         $input .= Html::activeFileField($model, $attribute);
-
-        $input .= Html::checkBox(get_class($model) . '[delete_images][' . $attribute . ']', false, ['label' => 'Удалить это изображение?']);
+        $input .= $deleteCheckbox;
 
         $htmlOptions['input'] = $input;
 
