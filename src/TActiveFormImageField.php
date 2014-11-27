@@ -25,7 +25,7 @@ trait TActiveFormImageField {
 
         $input = '';
         $deleteCheckbox = '';
-        if ($model->$attribute and $imageUrl = $model->getImageUrl($size)) {
+        if ($model->$attribute and $imageUrl = $model->getImageUrl($size, $attribute)) {
             $input .= Html::image($imageUrl) . '<br>';
             $deleteCheckbox = Html::checkBox(get_class($model) . '[delete_images][' . $attribute . ']', false, ['label' => 'Удалить это изображение?']);
         }
