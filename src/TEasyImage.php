@@ -58,7 +58,7 @@ trait TEasyImage {
         $url .= '/' . strtolower($attribute);
 
         $data = json_decode($this->$attribute, true);
-        if (!(array_key_exists('id', $data) and array_key_exists('ext', $data))) {
+        if (!is_array($data) or !(array_key_exists('id', $data) and array_key_exists('ext', $data))) {
             return false;
         }
 
