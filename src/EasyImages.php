@@ -84,9 +84,13 @@ class EasyImages extends \CApplicationComponent {
 
                 $pathImageSize = $folderModelAttribute . '/' . $imageId . '_' . $sizeName . '.' . $imageExtension;
                 if (array_key_exists('enabled', $size) and $size['enabled'] == false) {
-                    $this->processor
-                        ->open($imagePathTemp)
-                        ->save($pathImageSize, ['quality' => $quality]);
+                    if (array_key_exists('resave', $size) and $size['resave'] == false) {
+                        rename($imagePathTemp, $pathImageSize);
+                    } else {
+                        $this->processor
+                            ->open($imagePathTemp)
+                            ->save($pathImageSize, ['quality' => $quality]);
+                    }
                 } else {
                     $this->processor
                         ->open($imagePathTemp)
